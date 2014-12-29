@@ -1,4 +1,4 @@
-rex = require "rex_posix"
+rex = require "rex_pcre"
 cli = require "cliargs"
 lfs = require "lfs"
 
@@ -19,10 +19,10 @@ dir_listing = (path, file) ->
 dir_list = (path) ->
 	[dir_listing(path, file) for file in lfs.dir(path) when not contains({'.', '..'}, file)]
 
-print_listing = (filedata) ->
+print_listing = (filedata, regex) ->
 	for k, {file, mode, data} in pairs filedata
-		print file, mode
-		print_listing(data) if data
+		print rex.match(file, regex), mode
+		print_listing(data, regex) if data
 
 cli\set_name("regnamex.lua")
 cli\add_argument("DIR", "directory to scan")
@@ -42,6 +42,13 @@ ignored_files = switch type(args["IGNORED"])
 		args["IGNORED"]
 
 files = dir_list(args["DIR"])
-print_listing(files)
 
+regex = [==[(?:(?:\[[^\]]*\])|(?:\([^\)]*\)]))+([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?]==]
+print_listing(files, regex)
 
+-- ([\[]*[^\]]*[\]]*)([^\[|\]|\(|\)]*)([\[]*[^\]]*[\]]*c)
+-- (?![^\[|\]*])?([^\[|\]|\(|\)]+\b)(?:[^\[|\]]*)?
+-- ([\[][^\]]+[\]])+([^\[|\]|\(|\)]*)?([\[][^\]]+[\]])+
+-- ([\[][^\]]*[\]])+([^\[|\]|\(|\)]*)?(([\[][^\]]+[\]])|([\(][^\)]*[\)]))+
+-- ((\[[^\]]*\])|(\([^\)]*\)]))+([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?
+-- (?:(?:\[[^\]]*\])|(?:\([^\)]*\)]))+([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?
