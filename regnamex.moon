@@ -7,9 +7,9 @@ import concat, insert from table
 dir_listing = (path) ->
 	ret = {}
 	for file in lfs.dir(path)
-		mode = lfs.attributes(path .. '/' .. file)
-		item = {file, mode, if mode == 'directory' then dir_listing(file)}
-		insert(ret, item)
+		attr = lfs.attributes(path .. '/' .. file).mode
+		item = {file, attr, if attr == 'directory' and file != '.' and file != '..' then dir_listing(path .. '/' .. file)}
+		insert(ret, item) if file != '.' and file != '..'
 	ret
 
 cli\set_name("regnamex.lua")
@@ -25,6 +25,7 @@ files = dir_listing(args["DIR"])
 
 print_listing = (filedata) ->
 	for k, {file, mode, data} in pairs filedata
-		print file, mode, print_listing(data) if data
+		print file, mode
+		print_listing(data) if data
 
 print_listing(files)
