@@ -4,13 +4,14 @@ lfs = require "lfs"
 
 import concat, insert from table
 
-dir_listing = (path) ->
-	ret = {}
-	for file in lfs.dir(path)
-		attr = lfs.attributes(path .. '/' .. file).mode
-		item = {file, attr, if attr == 'directory' and file != '.' and file != '..' then dir_listing(path .. '/' .. file)}
-		insert(ret, item) if file != '.' and file != '..'
-	ret
+local dir_list, dir_listing
+dir_listing = (path, file) ->
+	f = path .. '/' .. file
+	attr = lfs.attributes(f).mode
+	{file, attr, if attr == 'directory' then dir_list(f)}
+
+dir_list = (path) ->
+	[dir_listing(path, file) for file in lfs.dir(path) when file != '.' and file != '..']
 
 cli\set_name("regnamex.lua")
 cli\add_argument("DIR", "directory to scan")
@@ -21,7 +22,7 @@ cli\add_flag("-d, --debug", "script will simulate excution, print actions.")
 args = cli\parse_args()
 return if not args
 
-files = dir_listing(args["DIR"])
+files = dir_list(args["DIR"])
 
 print_listing = (filedata) ->
 	for k, {file, mode, data} in pairs filedata
