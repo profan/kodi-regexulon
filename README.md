@@ -1,4 +1,4 @@
-regnamex
+regexulon
 =================================
 
 Utility made to reorganize media library of disorganized files into a collection which XBMC/Kodi's TVDB parser can read and make a library out of.
