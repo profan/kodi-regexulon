@@ -36,7 +36,7 @@ process_files = (filedata, regex, parent) ->
 				f = f\match("^%s*(.-)%s*$")
 				f = target .. '/' .. f
 				lfs.mkdir(f)
-				parent = {inputdir .. '/' .. file, f}
+				process_files(data, regex, {inputdir .. '/' .. file, f})
 			else
 				ext = file_ext(file)
 				newer_f = rex.match(file, regex)
@@ -47,7 +47,6 @@ process_files = (filedata, regex, parent) ->
 				lfs.link(old_f, new_f) if not debug
 				print "[D: " .. ((debug and "T") or "F") .. "] Link: " .. old_f .. " to: " .. new_f
 
-			process_files(data, regex, parent) if data
 		else
 			print "ERR: ", file, mode
 
