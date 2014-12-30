@@ -33,7 +33,6 @@ process_files = (filedata, regex, parent) ->
 		if rex.match(file, regex)
 			if mode == 'directory'
 				f = rex.match(file, regex)
-				f = f\gsub('[^aA-zZ|\\d| ]', '')
 				f = f\match("^%s*(.-)%s*$")
 				f = target .. '/' .. f
 				lfs.mkdir(f)
@@ -42,13 +41,15 @@ process_files = (filedata, regex, parent) ->
 				ext = file_ext(file)
 				newer_f = rex.match(file, regex)
 				new_f = rex.match(newer_f, [[(.*)(v\d)]]) or newer_f
-				new_f = new_f\gsub('[-,_, ]', '')
-				new_f = rex.gsub(new_f, [[(\D*)(\d*)]], [[%1_ep%2]], 1)
+				new_f = new_f\gsub('[ ]', '')
+				new_f = rex.gsub(new_f, [[([^\d]*)(\d+)[^\d]*$]], [[%1_ep%2]], 1)
 				old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. new_f .. ext
 				lfs.link(old_f, new_f) if not debug
 				print "[D: " .. ((debug and "T") or "F") .. "] Link: " .. old_f .. " to: " .. new_f
 
 			process_files(data, regex, parent) if data
+		else
+			print "ERR: ", file, mode
 
 cli\set_name("regnamex.lua")
 cli\add_argument("DIR", "directory to scan")
@@ -71,7 +72,7 @@ export files = dir_list(args["DIR"])
 export target = args["TARGET"]
 export debug = args["d"]
 
-regex = [==[(?:(?:\[[^\]]*\])|(?:\([^\)]*\)]))?([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?]==]
+regex = [==[(?:(?:\[[^\]]*\])|(?:\([^\)]*\)))*([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?]==]
 
 processed = process_files(files, regex)
 --print_listing(processed)
