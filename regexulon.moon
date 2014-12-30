@@ -28,15 +28,14 @@ print_listing = (filedata, regex) ->
 		print_listing(data, regex) if data
 
 process_files = (filedata, regex, parent) ->
-	parent = parent or {'',''}
 	for k, {file, mode, data} in pairs filedata
 		if rex.match(file, regex)
 			if mode == 'directory'
 				f = rex.match(file, regex)
 				f = f\match("^%s*(.-)%s*$")
-				f = target .. '/' .. f
+				f = parent[2] .. '/' .. f
 				lfs.mkdir(f)
-				process_files(data, regex, {inputdir .. '/' .. file, f})
+				process_files(data, regex, {parent[1] .. '/' .. file, f})
 			else
 				ext = file_ext(file)
 				newer_f = rex.match(file, regex)
@@ -73,7 +72,7 @@ export debug = args["d"]
 
 regex = [==[(?:(?:\[[^\]]*\])|(?:\([^\)]*\)))*([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?]==]
 
-processed = process_files(files, regex)
+processed = process_files(files, regex, {inputdir, target})
 --print_listing(processed)
 
 -- ([\[]*[^\]]*[\]]*)([^\[|\]|\(|\)]*)([\[]*[^\]]*[\]]*c)
