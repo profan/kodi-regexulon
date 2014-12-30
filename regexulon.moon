@@ -5,9 +5,14 @@ lfs = require "lfs"
 import concat, insert from table
 
 contains = (t, item) ->
+	return true if item == nil
 	for k, v in pairs t
 		return true if item == v
 	false
+
+file_ext = (str) ->
+	c1,c2,c3 = string.match(str, "(.-)([^\\]-([^%.]+))$")
+	return "." .. c3
 
 local dir_list, dir_listing
 dir_listing = (path, file) ->
@@ -27,12 +32,21 @@ process_files = (filedata, regex, parent) ->
 	ret = {}
 	parent = parent or {'',''}
 	for k, {file, mode, data} in pairs filedata
+		return if not rex.match(file, regex)
 		if mode == 'directory'
-			f = target .. '/' .. rex.match(file, regex)
+			f = rex.match(file, regex)
+			f = f\gsub('[^aA-zZ|\\d| ]', '')
+			f = f\match("^%s*(.-)%s*$")
+			f = target .. '/' .. f
 			lfs.mkdir(f)
 			parent = {inputdir .. '/' .. file, f}
 		else
-			old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. rex.match(file, regex)
+			ext = file_ext(file)
+			newer_f = rex.match(file, regex)
+			new_f = rex.match(newer_f, [[(.*)(v\d)]]) or newer_f
+			new_f = new_f\gsub('[-,_, ]', '')
+			new_f = rex.gsub(new_f, [[(\D*)(\d*)]], [[%1_ep%2]], 1)
+			old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. new_f .. ext
 			lfs.link(old_f, new_f)
 			print "Link: " .. old_f .. " to: " .. new_f
 		item = {rex.match(file, regex), mode, data}
