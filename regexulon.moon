@@ -30,25 +30,25 @@ print_listing = (filedata, regex) ->
 process_files = (filedata, regex, parent) ->
 	parent = parent or {'',''}
 	for k, {file, mode, data} in pairs filedata
-		return if not rex.match(file, regex)
-		if mode == 'directory'
-			f = rex.match(file, regex)
-			f = f\gsub('[^aA-zZ|\\d| ]', '')
-			f = f\match("^%s*(.-)%s*$")
-			f = target .. '/' .. f
-			lfs.mkdir(f)
-			parent = {inputdir .. '/' .. file, f}
-		else
-			ext = file_ext(file)
-			newer_f = rex.match(file, regex)
-			new_f = rex.match(newer_f, [[(.*)(v\d)]]) or newer_f
-			new_f = new_f\gsub('[-,_, ]', '')
-			new_f = rex.gsub(new_f, [[(\D*)(\d*)]], [[%1_ep%2]], 1)
-			old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. new_f .. ext
-			lfs.link(old_f, new_f)
-			print "Link: " .. old_f .. " to: " .. new_f
+		if rex.match(file, regex)
+			if mode == 'directory'
+				f = rex.match(file, regex)
+				f = f\gsub('[^aA-zZ|\\d| ]', '')
+				f = f\match("^%s*(.-)%s*$")
+				f = target .. '/' .. f
+				lfs.mkdir(f)
+				parent = {inputdir .. '/' .. file, f}
+			else
+				ext = file_ext(file)
+				newer_f = rex.match(file, regex)
+				new_f = rex.match(newer_f, [[(.*)(v\d)]]) or newer_f
+				new_f = new_f\gsub('[-,_, ]', '')
+				new_f = rex.gsub(new_f, [[(\D*)(\d*)]], [[%1_ep%2]], 1)
+				old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. new_f .. ext
+				lfs.link(old_f, new_f) if not debug
+				print "[D: " .. ((debug and "T") or "F") .. "] Link: " .. old_f .. " to: " .. new_f
 
-		process_files(data, regex, parent) if data
+			process_files(data, regex, parent) if data
 
 cli\set_name("regnamex.lua")
 cli\add_argument("DIR", "directory to scan")
@@ -69,11 +69,12 @@ ignored_files = switch type(args["IGNORED"])
 export inputdir = args["DIR"]
 export files = dir_list(args["DIR"])
 export target = args["TARGET"]
+export debug = args["d"]
 
 regex = [==[(?:(?:\[[^\]]*\])|(?:\([^\)]*\)]))?([^\[|\]|\(|\)]*[^\[|\]|\(|\)])?]==]
 
 processed = process_files(files, regex)
-print_listing(processed)
+--print_listing(processed)
 
 -- ([\[]*[^\]]*[\]]*)([^\[|\]|\(|\)]*)([\[]*[^\]]*[\]]*c)
 -- (?![^\[|\]*])?([^\[|\]|\(|\)]+\b)(?:[^\[|\]]*)?
