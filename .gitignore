@@ -1,3 +1,6 @@
 .*.s??
 *.lua
 *.txt
+target/
+*.moon
+regexulon.moon
