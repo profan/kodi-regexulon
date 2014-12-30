@@ -33,16 +33,16 @@ process_files = (filedata, regex, parent) ->
 			if mode == 'directory'
 				f = rex.gsub(file, regex, '')
 				f = f\match("^%s*(.-)%s*$")
-				f = parent[2] .. '/' .. f
+				f = parent.out .. '/' .. f
 				lfs.mkdir(f)
-				process_files(data, regex, {parent[1] .. '/' .. file, f})
+				process_files(data, regex, {in: parent.in .. '/' .. file, out: f})
 			else
 				ext = file_ext(file)
 				newer_f = rex.gsub(file, regex, '')
 				new_f = rex.match(newer_f, [[(.*)(v\d)]]) or newer_f
 				new_f = new_f\gsub('[ ]', '')
 				new_f = rex.gsub(new_f, [[([^\d]*)(\d+)[^\d]*$]], [[%1_ep%2]], 1)
-				old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. new_f .. ext
+				old_f, new_f = parent.in .. '/' .. file, parent.out .. '/' .. new_f .. ext
 				lfs.link(old_f, new_f) if not debug
 				print "[D: " .. ((debug and "T") or "F") .. "] Link: " .. old_f .. " to: " .. new_f
 
@@ -72,5 +72,5 @@ export debug = args["d"]
 
 regex = [==[\(.*?\)|\[.*?\]]==]
 
-processed = process_files(files, regex, {inputdir, target})
+processed = process_files(files, regex, {in: inputdir, out: target})
 --print_listing(processed)
