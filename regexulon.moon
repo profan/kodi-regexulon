@@ -28,7 +28,6 @@ print_listing = (filedata, regex) ->
 		print_listing(data, regex) if data
 
 process_files = (filedata, regex, parent) ->
-	ret = {}
 	parent = parent or {'',''}
 	for k, {file, mode, data} in pairs filedata
 		return if not rex.match(file, regex)
@@ -48,10 +47,8 @@ process_files = (filedata, regex, parent) ->
 			old_f, new_f = parent[1] .. '/' .. file, parent[2] .. '/' .. new_f .. ext
 			lfs.link(old_f, new_f)
 			print "Link: " .. old_f .. " to: " .. new_f
-		item = {rex.match(file, regex), mode, data}
-		item[3] = process_files(data, regex, parent) if data
-		insert(ret, item)
-	ret
+
+		process_files(data, regex, parent) if data
 
 cli\set_name("regnamex.lua")
 cli\add_argument("DIR", "directory to scan")
