@@ -11,8 +11,7 @@ contains = (t, item) ->
 	false
 
 file_ext = (str) ->
-	c1,c2,c3 = string.match(str, "(.-)([^\\]-([^%.]+))$")
-	return "." .. c3
+	return "." .. str\match(".([^%.]+)$")
 
 local dir_list, dir_listing
 dir_listing = (path, file) ->
