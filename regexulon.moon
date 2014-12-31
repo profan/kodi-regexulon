@@ -2,7 +2,7 @@ rex = require "rex_pcre"
 cli = require "cliargs"
 lfs = require "lfs"
 
-import concat, insert from table
+import insert from table
 
 contains = (t, item) ->
 	return true if item == nil
@@ -68,14 +68,12 @@ ignored_files = switch type(args["IGNORED"])
 	else
 		args["IGNORED"]
 
-export inputdir = args["DIR"]
-export target = args["TARGET"]
+inputdir = args["DIR"]
+targetdir = args["TARGET"]
 export debug = args["d"]
 
 files = dir_list(args["DIR"])
 regex = [==[\(.*?\)|\[.*?\]]==]
 
 map_listing(files, print_listing)
-
-processed = process_files(files, regex, {in: inputdir, out: target})
---print_listing(processed)
+processed = process_files(files, regex, {in: inputdir, out: targetdir})
