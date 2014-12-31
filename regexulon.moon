@@ -35,8 +35,7 @@ process_files = (filedata, regex, parent) ->
 	for k, {file, mode, data} in pairs filedata
 		if rex.gsub(file, regex, '')
 			if mode == 'directory'
-				f = rex.gsub(file, regex, '')
-				f = f\match("^%s*(.-)%s*$")
+				f = rex.gsub(file, regex, '')\match("^%s*(.-)%s*$")
 				f = parent.out .. '/' .. f
 				lfs.mkdir(f)
 				process_files(data, regex, {in: parent.in .. '/' .. file, out: f})
