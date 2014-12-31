@@ -22,10 +22,14 @@ dir_listing = (path, file) ->
 dir_list = (path) ->
 	[dir_listing(path, file) for file in lfs.dir(path) when not contains({'.', '..'}, file)]
 
-print_listing = (filedata, regex) ->
-	for k, {file, mode, data} in pairs filedata
-		print file, mode
-		print_listing(data, regex) if data
+map_listing = (structure, func) ->
+	for k, v in pairs structure
+		func(v, map_listing)
+
+print_listing = (value, func) ->
+	{file, mode, data} = value
+	print file, mode
+	func(data, print_listing) if data
 
 process_files = (filedata, regex, parent) ->
 	for k, {file, mode, data} in pairs filedata
@@ -71,6 +75,8 @@ export target = args["TARGET"]
 export debug = args["d"]
 
 regex = [==[\(.*?\)|\[.*?\]]==]
+
+map_listing(files, print_listing)
 
 processed = process_files(files, regex, {in: inputdir, out: target})
 --print_listing(processed)
