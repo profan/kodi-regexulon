@@ -69,10 +69,10 @@ ignored_files = switch type(args["IGNORED"])
 		args["IGNORED"]
 
 export inputdir = args["DIR"]
-export files = dir_list(args["DIR"])
 export target = args["TARGET"]
 export debug = args["d"]
 
+files = dir_list(args["DIR"])
 regex = [==[\(.*?\)|\[.*?\]]==]
 
 map_listing(files, print_listing)
