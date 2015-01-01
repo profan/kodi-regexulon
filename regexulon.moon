@@ -9,9 +9,6 @@ contains = (t, item) ->
 		return true if v == item
 	false
 
-file_ext = (str) ->
-	return "." .. str\match(".([^%.]+)$")
-
 local dir_list, dir_listing
 dir_listing = (path, file) ->
 	f = path .. '/' .. file
@@ -30,7 +27,11 @@ print_listing = (value, func) ->
 	print file, mode
 	func(data, print_listing) if data
 
-dbg = (b) -> return "[DBG: #{(b and 'Y') or 'N'}]"
+file_ext = (str) ->
+	"." .. str\match(".([^%.]+)$")
+
+dbg = (b) -> 
+	"[DBG: #{(b and 'Y') or 'N'}]"
 
 perform_action = (old, new, action) ->
 	print dbg(debug) .. switch action
