@@ -31,6 +31,20 @@ print_listing = (value, func) ->
 	print file, mode
 	func(data, print_listing) if data
 
+dbg = (b) -> return "[DBG:" .. ((b and "Y") or "N") .. "]"
+
+perform_action = (old, new, action = "hardlink") ->
+	switch action
+		when "copy"
+			print "[cp]: Not yet implemented."
+		when "move"
+			print "[mv]: Not yet implemented."
+		when "symlink", "hardlink"
+			print dbg(debug), "[link]:", old, "to:", new
+			lfs.link(old, new, action == "hardlink" or false) if not debug
+		else
+			print "Unknown action:", action
+
 process_files = (filedata, regex, parent) ->
 	for k, {file, mode, data} in pairs filedata
 		if rex.gsub(file, regex, '')
@@ -46,8 +60,7 @@ process_files = (filedata, regex, parent) ->
 				new_f = new_f\gsub('[ ]', '')
 				new_f = rex.gsub(new_f, [[([^\d]*)(\d+)[^\d]*$]], [[%1_ep%2]], 1)
 				old_f, new_f = parent.in .. '/' .. file, parent.out .. '/' .. new_f .. ext
-				lfs.link(old_f, new_f) if not debug
-				print "[D: " .. ((debug and "T") or "F") .. "] Link: " .. old_f .. " to: " .. new_f
+				perform_action(old_f, new_f, args["a"] or nil)
 
 		else
 			print "ERR: ", file, mode
@@ -56,10 +69,10 @@ cli\set_name("regnamex.lua")
 cli\add_argument("DIR", "directory to scan")
 cli\add_argument("TARGET", "target directory")
 cli\optarg("IGNORED", "ignored files/directories")
-cli\add_flag("-t, --type", "action to take: cp, mv, symlink, defaults to symlink", "symlink")
+cli\add_flag("-a, --action", "action to take: cp, mv, symlink, hardlink, defaults to hardlink", "hardlink")
 cli\add_flag("-v, --version", "prints the program version")
 cli\add_flag("-d, --debug", "script will simulate excution, print actions.")
-args = cli\parse_args()
+export args = cli\parse_args()
 return if not args
 
 ignored_files = switch type(args["IGNORED"])
