@@ -65,7 +65,7 @@ process_files = (filedata, regex, parent) ->
 		else
 			print "ERR: ", file, mode
 
-cli\set_name("regnamex.lua")
+cli\set_name("regexulon.lua")
 cli\add_argument("DIR", "directory to scan")
 cli\add_argument("TARGET", "target directory")
 cli\optarg("IGNORED", "ignored files/directories")
