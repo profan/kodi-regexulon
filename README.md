@@ -8,7 +8,7 @@ Keeps track of created shows in a textfile to allow deletion if requested.
 
 Created for absolutely ordered episodes, already in their correct subfolders, attempts to filter out most of the noise which normally prevents the various scrapers from parsing the information.
 
-Currently catches cases where a show folder is named like ´[stuff](things) show name (otherstuff)[woo]´ with episodes inside which are similar, the last number in the filename is treated as the episode number and appended with ´ep´ to help the scraper.
+Currently catches cases where a show folder is named like `[stuff](things) show name (otherstuff)[woo]` with episodes inside which are similar, the last number in the filename is treated as the episode number and appended with `ep` to help the scraper.
 
 
 Requirements
