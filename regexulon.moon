@@ -32,7 +32,7 @@ print_listing = (value, func) ->
 
 dbg = (b) -> return "[DBG: #{(b and 'Y') or 'N'}]"
 
-perform_action = (old, new, action = "hardlink") ->
+perform_action = (old, new, action) ->
 	print dbg(debug) .. switch action
 		when "copy"
 			"[cp]: Not yet implemented."
@@ -42,7 +42,7 @@ perform_action = (old, new, action = "hardlink") ->
 			lfs.link(old, new, action == "hardlink" or false) if not debug
 			"[link]: #{old} to: #{new}"
 		else
-			"unknown action."
+			"unknown action: #{action}"
 
 process_files = (filedata, regex, parent) ->
 	for k, {file, mode, data} in pairs filedata
@@ -59,7 +59,7 @@ process_files = (filedata, regex, parent) ->
 				new_f = new_f\gsub('[ ]', '')
 				new_f = rex.gsub(new_f, [[([^\d]*)(\d+)[^\d]*$]], [[%1_ep%2]], 1)
 				old_f, new_f = parent.in .. '/' .. file, parent.out .. '/' .. new_f .. ext
-				perform_action(old_f, new_f, args["a"] or nil)
+				perform_action(old_f, new_f, args["a"])
 
 		else
 			print "ERR: ", file, mode
@@ -68,9 +68,10 @@ cli\set_name("regexulon.lua")
 cli\add_argument("DIR", "directory to scan")
 cli\add_argument("TARGET", "target directory")
 cli\optarg("IGNORED", "ignored files/directories")
-cli\add_flag("-a, --action", "action to take: cp, mv, symlink, hardlink, defaults to hardlink", "hardlink")
-cli\add_flag("-v, --version", "prints the program version")
-cli\add_flag("-d, --debug", "script will simulate excution, print actions.")
+cli\add_option("-a, --action=ACTION", "action to take: cp, mv, symlink, hardlink", "hardlink")
+cli\add_flag("-d, --debug", "script will simulate execution.")
+cli\add_flag("-V, --version", "prints the program version")
+cli\add_flag("-v, --verbose", "verbose output")
 export args = cli\parse_args()
 return if not args
 
@@ -87,5 +88,5 @@ export debug = args["d"]
 files = dir_list(args["DIR"])
 regex = [==[\(.*?\)|\[.*?\]]==]
 
-map_listing(files, print_listing)
+--map_listing(files, print_listing)
 processed = process_files(files, regex, {in: inputdir, out: targetdir})
