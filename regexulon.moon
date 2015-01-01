@@ -5,9 +5,8 @@ lfs = require "lfs"
 import insert from table
 
 contains = (t, item) ->
-	return true if item == nil
 	for k, v in pairs t
-		return true if item == v
+		return true if v == item
 	false
 
 file_ext = (str) ->
@@ -34,7 +33,7 @@ print_listing = (value, func) ->
 dbg = (b) -> return "[DBG: #{(b and 'Y') or 'N'}]"
 
 perform_action = (old, new, action = "hardlink") ->
-	print dbg(debug), switch action
+	print dbg(debug) .. switch action
 		when "copy"
 			"[cp]: Not yet implemented."
 		when "move"
