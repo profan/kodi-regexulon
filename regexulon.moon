@@ -34,16 +34,16 @@ print_listing = (value, func) ->
 dbg = (b) -> return "[DBG:" .. ((b and "Y") or "N") .. "]"
 
 perform_action = (old, new, action = "hardlink") ->
-	switch action
+	print dbg(debug), switch action
 		when "copy"
-			print "[cp]: Not yet implemented."
+			"[cp]: Not yet implemented."
 		when "move"
-			print "[mv]: Not yet implemented."
+			"[mv]: Not yet implemented."
 		when "symlink", "hardlink"
-			print dbg(debug), "[link]:", old, "to:", new
 			lfs.link(old, new, action == "hardlink" or false) if not debug
+			"[link]: " .. old .. "to: " .. new
 		else
-			print "Unknown action:", action
+			"unknown action."
 
 process_files = (filedata, regex, parent) ->
 	for k, {file, mode, data} in pairs filedata
