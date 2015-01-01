@@ -31,7 +31,7 @@ print_listing = (value, func) ->
 	print file, mode
 	func(data, print_listing) if data
 
-dbg = (b) -> return "[DBG:" .. ((b and "Y") or "N") .. "]"
+dbg = (b) -> return "[DBG: #{(b and 'Y') or 'N'}]"
 
 perform_action = (old, new, action = "hardlink") ->
 	print dbg(debug), switch action
@@ -41,7 +41,7 @@ perform_action = (old, new, action = "hardlink") ->
 			"[mv]: Not yet implemented."
 		when "symlink", "hardlink"
 			lfs.link(old, new, action == "hardlink" or false) if not debug
-			"[link]: " .. old .. "to: " .. new
+			"[link]: #{old} to: #{new}"
 		else
 			"unknown action."
 
