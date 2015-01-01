@@ -13,6 +13,9 @@ Requirements
 ------------
 
 * MoonScript
+* LuaFileSystem
+* lua\_cliargs
+
 
 Downloading the source
 ------------
