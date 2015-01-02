@@ -19,8 +19,11 @@ dir_list = (path) ->
 	[dir_listing(path, file) for file in lfs.dir(path) when not contains({'.', '..'}, file)]
 
 map_listing = (structure, func) ->
+	results = {}
 	for k, v in pairs structure
-		func(v, map_listing)
+		res = func(v, map_listing)
+		insert(results, res) if res
+	results
 
 print_listing = (value, func) ->
 	{file, mode, data} = value
