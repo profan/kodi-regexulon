@@ -68,7 +68,7 @@ process_files = (filedata, regex, parent) ->
 cli\set_name("regexulon.lua")
 cli\add_argument("DIR", "directory to scan")
 cli\add_argument("TARGET", "target directory")
-cli\optarg("IGNORED", "ignored files/directories")
+cli\optarg("IGNORED", "ignored files/directories", "")
 cli\add_option("-a, --action=ACTION", "action to take: cp, mv, symlink, hardlink", "hardlink")
 cli\add_flag("-d, --debug", "script will simulate execution.")
 cli\add_flag("-V, --version", "prints the program version")
@@ -77,10 +77,8 @@ export args = cli\parse_args()
 return if not args
 
 ignored_files = switch type(args["IGNORED"])
-	when "string"
-		{}
-	else
-		args["IGNORED"]
+	when "string" then {} 
+	else args["IGNORED"]
 
 inputdir = args["DIR"]
 targetdir = args["TARGET"]
