@@ -43,6 +43,7 @@ perform_action = (old, new, action) ->
 		when "move"
 			"[mv]: Not yet implemented."
 		when "mkdir"
+			lfs.mkdir(out_f) if not debug
 			"[mkdir]: #{old} to: #{new}"
 		when "symlink", "hardlink"
 			lfs.link(old, new, action == "hardlink" or false) if not debug
@@ -52,8 +53,8 @@ perform_action = (old, new, action) ->
 
 process_files = (filedata, regex, parent) ->
 	for k, {file, mode, data} in pairs filedata
+		
 		if rex.gsub(file, regex, '')
-
 
 			isdir = (md) -> if md == 'directory' then true else false
 
