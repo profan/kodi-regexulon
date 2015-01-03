@@ -56,26 +56,23 @@ process_files = (filedata, regex, parent) ->
 		
 		if rex.gsub(file, regex, '')
 
-			isdir = (md) -> if md == 'directory' then true else false
+			isdir = (md) -> md == 'directory'
+
+			dir_transform = (f) ->
+				f = rex.gsub(f, regex, '')
+				f = f\match("^%s*(.-)%s*$")
+				parent.out .. '/' .. f
+				
+			file_transform = (f) ->
+				f = rex.gsub(f, regex, '')
+				f = rex.match(f, [[(.*)(v\d)]]) or f
+				f = f\gsub('[ ]', '')
+				f = rex.gsub(f, [[([^\d]*)(\d+)[^\d]*$]], [[%1_ep%2]], 1)
+				f ..= file_ext(file)
+				parent.out .. '/' .. f
 
 			in_f = parent.in .. '/' .. file
-			out_f = if isdir(mode)
-				do
-					f = file
-					->
-					f = rex.gsub(f, regex, '')
-					f = f\match("^%s*(.-)%s*$")
-					parent.out .. '/' .. f
-			else
-				do
-					f = file
-					->
-					f = rex.gsub(f, regex, '')
-					f = rex.match(f, [[(.*)(v\d)]]) or f
-					f = f\gsub('[ ]', '')
-					f = rex.gsub(f, [[([^\d]*)(\d+)[^\d]*$]], [[%1_ep%2]], 1)
-					f ..= file_ext(file)
-					parent.out .. '/' .. f
+			out_f = if isdir(mode) then dir_transform(file) else file_transform(file)
 			
 			action = if isdir(mode) then "mkdir" else args["a"]
 			print perform_action(in_f, out_f, action)
