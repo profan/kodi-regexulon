@@ -1,0 +1,2 @@
+install:
+	moonc regexulon.moon
