@@ -105,5 +105,4 @@ export debug = args["d"]
 files = dir_list(args["DIR"])
 regex = [==[\(.*?\)|\[.*?\]]==]
 
---map_listing(files, print_listing)
 processed = process_files(files, regex, {in: inputdir, out: targetdir})
