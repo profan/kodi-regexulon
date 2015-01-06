@@ -14,6 +14,7 @@ Currently catches cases where a show folder is named like `[stuff](things) show 
 Requirements
 ------------
 
+* Lua >= 5.1
 * LuaRocks (not required, but makes it easier to get the dependencies)
 * MoonScript
 * LuaFileSystem
@@ -34,7 +35,7 @@ Building
 Usage
 ------------
 
-	...
+	regexulon [OPTIONS] DIR TARGET [IGNORED FILES/DIRECTORIES]
 
 TODO
 ------------
