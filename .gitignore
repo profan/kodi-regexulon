@@ -4,3 +4,4 @@
 target/
 *.moon
 regexulon.moon
+*.xml
