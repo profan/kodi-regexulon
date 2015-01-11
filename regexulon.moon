@@ -48,8 +48,8 @@ perform_action = (old, new, action) ->
 			lfs.mkdir(new) if not debug
 			"[mkdir]: #{old} to: #{new}"
 		when "symlink", "hardlink"
-			lfs.link(old, new, action == "hardlink" or false) if not debug
-			"[link]: #{old} to: #{new}"
+			lfs.link(old, new, action != "hardlink") if not debug
+			"#{action} [link]: #{old} to: #{new}"
 		else
 			"unknown action: #{action}"
 
