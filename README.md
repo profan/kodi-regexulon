@@ -31,7 +31,7 @@ Either with git clone as below or by downloading a zipball of the [latest...](ht
 Building
 ------------
 
-	luarocks make
+	luarocks make rockspecs/regexulon-1.0-1.rockspec
 
 Usage
 ------------
