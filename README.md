@@ -10,6 +10,8 @@ Created for absolutely ordered episodes, already in their correct subfolders, at
 
 Currently catches cases where a show folder is named like `[stuff](things) show name (otherstuff)[woo]` with episodes inside which are similar, the last number in the filename is treated as the episode number and appended with `ep` to help the scraper.
 
+Also uses a [bk-tree](https://github.com/profan/lua-bk-tree) loaded with information from a [list](https://raw.github.com/ScudLee/anime-lists/master/anime-list-full.xml) of names to match episodes towards the list of names, currently only handles anime, but intended to become more generic.
+
 
 Requirements
 ------------
