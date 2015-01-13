@@ -96,7 +96,6 @@ process_xml = (string) ->
 				for k2, st in pairs t
 					if st.xml == "name"
 						shows[#shows+1] = st[1] if type(st[1]) == "string"
-						print shows[#shows]
 
 	shows
 
