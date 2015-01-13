@@ -35,21 +35,23 @@ Building
 Usage
 ------------
 
-	Usage: regexulon.lua [OPTIONS]  DIR  TARGET  [IGNORED]
-	
-	ARGUMENTS: 
-	  DIR                 directory to scan (required)
-	  TARGET              target directory (required)
-	  IGNORED             ignored files/directories (optional, default: )
-	
-	OPTIONS: 
-	  -a, --action=ACTION action to take: cp, mv, symlink, hardlink
-	                      (default: hardlink)
-	  -e, --existing      skip creating previously existing target
-	                      directories.
-	  -d, --debug         script will simulate execution.
-	  -V, --version       prints the program version
-	  -v, --verbose       verbose output
+Usage: regexulon [OPTIONS]  DIR  TARGET  [IGNORED]
+
+ARGUMENTS: 
+  DIR                 directory to scan (required)
+  TARGET              target directory (required)
+  IGNORED             ignored files/directories (optional, default: )
+
+OPTIONS: 
+  -a, --action=ACTION action to take: cp, mv, symlink, hardlink
+                      (default: hardlink)
+  -n, --noprompt      don't prompt when asking for new directory names,
+                      pick closest option.
+  -e, --existing      skip creating previously existing target
+                      directories.
+  -d, --debug         script will simulate execution.
+  -V, --version       prints the program version
+  -v, --verbose       verbose output
 
 
 TODO
