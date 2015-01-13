@@ -19,6 +19,7 @@ Requirements
 * MoonScript
 * LuaFileSystem
 * lua\_cliargs
+* bk-tree
 
 
 Downloading the source
