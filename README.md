@@ -5,12 +5,27 @@ Utility made to reorganize media library of disorganized files into a collection
 
 Lets you either move and rename the files, copy and rename, or accomplish it with symlinks/hardlinks.
 
+Still needs a lot of work to be of use to anyone.
+
 ## Usage Area
 Created for absolutely ordered episodes, already in their correct subfolders, attempts to filter out most of the noise which normally prevents the various scrapers from parsing the information.
 
 Currently catches cases where a show folder is named like `[stuff](things) show name (otherstuff)[woo]` with episodes inside which are similar, the last number in the filename is treated as the episode number and appended with `ep` to help the scraper.
 
 Also uses a [bk-tree](https://github.com/profan/lua-bk-tree) loaded with information from a [list](https://raw.github.com/ScudLee/anime-lists/master/anime-list-full.xml) of names to match episodes towards the list of names, currently only handles anime, but intended to become more generic.
+
+## Example
+
+	//Example run: ./regexulon --debug testdata target
+	Similarity Search Max Distance: -1 (-1 to set the max edit distance to length of string)
+	Skip: Show Name Folder? (Y/N): N 
+	----------------------------
+	Original String: Show Name Folder 
+	#1 Votoms Finder 
+	#2 Rhea Gall Force 
+	Enter number to pick (blank to keep original):
+	//listed by closest match, in this case it's contrived since it's a fake name.
+	//picking a number would make the target folder name the name of the number picked
 
 
 Requirements
